@@ -5,7 +5,7 @@
 # called test_blah and runs them)
 
 from auction import History
-from bbagent import BBAgent
+from zapsbb import ZapsBB
 
 
 def dual_assert(x,y):
@@ -38,9 +38,9 @@ def test_bb():
 
     history = History(bids, occupants, slot_clicks, per_click_payments, slot_payments)
 
-    a1 = BBAgent(1, 8, budget)
-    a2 = BBAgent(2, 10, budget)
-    a3 = BBAgent(3, 20, budget)
+    a1 = ZapsBB(1, 8, budget)
+    a2 = ZapsBB(2, 10, budget)
+    a3 = ZapsBB(3, 20, budget)
 
     # a1's utils for slots: [3 * (8-10), 2*(8-5), 0] = [-6, 6, 0]
     verb_assert(a1.expected_utils(t, history, reserve), [-6, 6, 0])
@@ -124,9 +124,9 @@ def test_bb_overbid():
 
     history = History(bids, occupants, slot_clicks, per_click_payments, slot_payments)
 
-    a1 = BBAgent(1, 8, budget)
-    a2 = BBAgent(2, 15, budget)
-    a3 = BBAgent(3, 20, budget)
+    a1 = ZapsBB(1, 8, budget)
+    a2 = ZapsBB(2, 15, budget)
+    a3 = ZapsBB(3, 20, budget)
 
     # a1's utils for slots: [3 * (8-16), 2*(8-14), 0] = [-24, -12, 0]
     assert a1.expected_utils(t, history, reserve) == [-24, -12, 0]
@@ -135,6 +135,7 @@ def test_bb_overbid():
     dual_assert (a1.bid(t, history, reserve), 8)
     print("\n\tFinished test_bb_overbid..")
 
-test_bb()
-test_bb_reserve()
-test_bb_overbid()
+if __name__ == "__main__":
+    test_bb()
+    test_bb_reserve()
+    test_bb_overbid()

@@ -92,5 +92,6 @@ def test_bid_ranges():
 
     print('\n\t Finished test_bid_ranges')
 
-test_mechanism()
-test_bid_ranges()
+if __name__ == "__main__":
+    test_mechanism()
+    test_bid_ranges()
