@@ -80,9 +80,9 @@ def test_bb_reserve():
 
     history = History(bids, occupants, slot_clicks, per_click_payments, slot_payments)
 
-    a1 = BBAgent(1, 8, budget)
-    a2 = BBAgent(2, 10, budget)
-    a3 = BBAgent(3, 20, budget)
+    a1 = ZapsBB(1, 8, budget)
+    a2 = ZapsBB(2, 10, budget)
+    a3 = ZapsBB(3, 20, budget)
 
     # Test both with reserve and without
     # a1's utils for slots: [3 * (8-10), 2*(8-7), 1*(8-5)] = [-6, 2, 3]
