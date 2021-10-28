@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import sys
+import random
 
 from gsp import GSP
 from util import argmax_index
@@ -13,7 +14,7 @@ class ZapsBudget:
         self.budget = budget
 
     def initial_bid(self, reserve):
-        return self.value / 2
+        return 0
 
 
     def slot_info(self, t, history, reserve):
@@ -50,9 +51,17 @@ class ZapsBudget:
         returns a list of utilities per slot.
         """
         # TODO: Fill this in
-        utilities = []   # Change this
+        utilities = []
+        clicks = history.round(t-1).clicks
+        num_slots = len(clicks)
 
-        
+        slot_infos = self.slot_info(t, history, reserve)
+
+        for i in range(num_slots):
+            min_bid = slot_infos[i][1]
+            utility = clicks[i] * (self.value - min_bid)
+            utilities.append(utility)
+
         return utilities
 
     def target_slot(self, t, history, reserve):
@@ -82,9 +91,29 @@ class ZapsBudget:
         (slot, min_bid, max_bid) = self.target_slot(t, history, reserve)
 
         # TODO: Fill this in.
-        bid = 0  # change this
-        
-        return bid
+        clicks = prev_round.clicks
+
+        if slot == 0 or min_bid > self.value:
+            bid = self.value
+        else:
+            utility = clicks[slot] * (self.value - min_bid)
+            bid = self.value - utility/clicks[slot - 1]
+
+        budget_to_payment = 1
+        print('DENOM:', min_bid * clicks[slot])
+        if min_bid * clicks[slot] > 0:
+            budget_to_payment = (self.budget / 48) / (min_bid * clicks[slot])
+
+        will_bid = random.random() <= budget_to_payment
+        print('PROB:', budget_to_payment)
+        print('WILL BID:', will_bid)
+
+        if (t == 47):
+            bid = self.value
+            will_bid = 1
+            print('HIII')
+
+        return bid * will_bid
 
     def __repr__(self):
         return "%s(id=%d, value=%d)" % (
