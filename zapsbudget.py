@@ -99,20 +99,24 @@ class ZapsBudget:
             utility = clicks[slot] * (self.value - min_bid)
             bid = self.value - utility/clicks[slot - 1]
 
+        # print(history.agents_spent[self.id])
+
         budget_to_payment = 1
-        print('DENOM:', min_bid * clicks[slot])
-        if min_bid * clicks[slot] > 0:
-            budget_to_payment = (self.budget / 48) / (min_bid * clicks[slot])
+        # print('DENOM:', min_bid * clicks[slot])
+        if min_bid * clicks[slot] > 0 and 48 - t > 0:
+            # budget_to_payment = (0.8 if t < 24 else 1) * ((self.budget - history.agents_spent[self.id]) / (48 - t)) / (min_bid * clicks[slot])
+            budget_to_payment = ((self.budget - history.agents_spent[self.id]) / (48 - t)) / (min_bid * clicks[slot])
+            # budget_to_payment = (self.budget / 48) / (min_bid * clicks[slot])
 
         will_bid = random.random() <= budget_to_payment
-        print('PROB:', budget_to_payment)
-        print('WILL BID:', will_bid)
+        # print('PROB:', budget_to_payment)
+        # print('WILL BID:', will_bid)
 
         # -1 style points, unnecessary parentheses
         if (t == 47):
             bid = self.value
             will_bid = 1
-            print('HIII')
+            # print('HIII')
 
         return bid * will_bid
 
