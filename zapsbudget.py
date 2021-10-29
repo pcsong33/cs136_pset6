@@ -74,7 +74,7 @@ class ZapsBudget:
         """
         i =  argmax_index(self.expected_utils(t, history, reserve))
         info = self.slot_info(t, history, reserve)
-        return info[i]
+        return info[3]
 
     def bid(self, t, history, reserve):
         # The Balanced bidding strategy (BB) is the strategy for a player j that, given
@@ -108,6 +108,7 @@ class ZapsBudget:
         print('PROB:', budget_to_payment)
         print('WILL BID:', will_bid)
 
+        # -1 style points, unnecessary parentheses
         if (t == 47):
             bid = self.value
             will_bid = 1

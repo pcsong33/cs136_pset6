@@ -104,7 +104,7 @@ def sim(config):
                     current_bids.append( (a.id, b))
                 else:
                     # Out of money: make bid zero.
-                    current_bids.append( (a.id, 0))
+                    current_bids.append((a.id, 0))
             bids[t] = current_bids
 
         ##   Ignore those below reserve price
@@ -132,6 +132,10 @@ def sim(config):
         def agent_value(agent_id, clicks, payment):
             if agent_id is not None:
                 values[t][agent_id] = by_id[agent_id].value * clicks - payment
+            if agent_id == 0:
+                hi = values[t][agent_id]
+                print("print here")
+
             return None
 
         list(map(agent_value, slot_occupants[t], slot_clicks[t], slot_payments[t]))
