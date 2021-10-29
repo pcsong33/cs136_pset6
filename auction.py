@@ -132,9 +132,6 @@ def sim(config):
         def agent_value(agent_id, clicks, payment):
             if agent_id is not None:
                 values[t][agent_id] = by_id[agent_id].value * clicks - payment
-            if agent_id == 0:
-                hi = values[t][agent_id]
-                print("print here")
 
             return None
 

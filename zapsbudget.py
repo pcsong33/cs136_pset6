@@ -72,9 +72,9 @@ class ZapsBudget:
         the other-agent bid for that slot in the last round.  If slot_id = 0,
         max_bid is min_bid * 2
         """
-        i =  argmax_index(self.expected_utils(t, history, reserve))
+        i = len(history.round(t-1).clicks) - 1
         info = self.slot_info(t, history, reserve)
-        return info[3]
+        return info[i]
 
     def bid(self, t, history, reserve):
         # The Balanced bidding strategy (BB) is the strategy for a player j that, given
@@ -88,35 +88,24 @@ class ZapsBudget:
         # If s*_j is the top slot, bid the value v_j
 
         prev_round = history.round(t-1)
-        (slot, min_bid, max_bid) = self.target_slot(t, history, reserve)
+        (slot, min_bid, _) = self.target_slot(t, history, reserve)
 
         # TODO: Fill this in.
         clicks = prev_round.clicks
 
-        if slot == 0 or min_bid > self.value:
+        if slot == 0 or min_bid > self.value or t == 47:
             bid = self.value
         else:
             utility = clicks[slot] * (self.value - min_bid)
             bid = self.value - utility/clicks[slot - 1]
 
-        # print(history.agents_spent[self.id])
-
         budget_to_payment = 1
-        # print('DENOM:', min_bid * clicks[slot])
-        if min_bid * clicks[slot] > 0 and 48 - t > 0:
-            # budget_to_payment = (0.8 if t < 24 else 1) * ((self.budget - history.agents_spent[self.id]) / (48 - t)) / (min_bid * clicks[slot])
-            budget_to_payment = ((self.budget - history.agents_spent[self.id]) / (48 - t)) / (min_bid * clicks[slot])
-            # budget_to_payment = (self.budget / 48) / (min_bid * clicks[slot])
+        if min_bid * clicks[slot] > 0 and 48 - t > 0 and t != 47:
+            budget_per_period = (self.budget - history.agents_spent[self.id]) / (48 - t)
+            expected_pay = min_bid * clicks[slot]
+            budget_to_payment = budget_per_period / expected_pay
 
         will_bid = random.random() <= budget_to_payment
-        # print('PROB:', budget_to_payment)
-        # print('WILL BID:', will_bid)
-
-        # -1 style points, unnecessary parentheses
-        if (t == 47):
-            bid = self.value
-            will_bid = 1
-            # print('HIII')
 
         return bid * will_bid
 
